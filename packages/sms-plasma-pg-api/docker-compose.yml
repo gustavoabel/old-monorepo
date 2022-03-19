@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  pg-api:
+    build: .
+    image: pg-api:1.0.0
+    container_name: pg-api
+    restart: always
+    ports:
+      - 12080:3000
+    environment:
+      NODE_ENV: production
+      UDS_PATH: /tmp/pg-api.sock
+      PARSER_CACHE_SIZE: 200
+      DB_HOST: 172.28.3.110
+      DB_PORT: 5432
+      DB_DATABASE: d00001
+      DB_USER: postgres
+      DB_PASSWORD: Aregano0
+      SECURITY_SCHEMA: security
+      BODY_PARSER_LIMIT: 100mb
+      CORS_ORIGIN_URL: http://localhost:3000,https://172.28.3.110,https://dev-customer-app.viridis.energy
+      JWT_SECRET: 94fe4f95e52c62ff0c699dfd1a46252c
+      TOKEN_KEY: '@sms:token'
+      SECURITY_API_BASE_URL: https://172.28.3.110/security/api

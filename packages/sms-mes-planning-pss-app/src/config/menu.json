@@ -1,0 +1,52 @@
+[
+  {
+    "title": "app.menu.sequencePage",
+    "icon": "home-lg-alt",
+    "page": "SequencePage"
+  },
+  {
+    "title": "app.menu.system",
+    "icon": "monitor-heart-rate",
+    "children": [
+      {
+        "page": "ApplicationParameter"
+      },
+      {
+        "page": "AuditTrail"
+      }
+    ]
+  },
+  {
+    "title": "app.menu.security",
+    "icon": "lock-alt",
+    "children": [
+      {
+        "page": "IdentityProvider"
+      },
+      {
+        "page": "Role"
+      },
+      {
+        "page": "User"
+      }
+    ]
+  },
+  {
+    "title": "app.menu.configuration",
+    "icon": "sliders-v",
+    "children": [
+      {
+        "page": "MaterialFilter"
+      },
+      {
+        "page": "PlanningHorizon"
+      },
+      {
+        "page": "SchedulingRule"
+      },
+      {
+        "page": "LimitConfiguration"
+      }
+    ]
+  }
+]

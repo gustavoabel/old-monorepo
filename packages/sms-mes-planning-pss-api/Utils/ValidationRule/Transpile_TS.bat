@@ -1,0 +1,1 @@
+tsc "C:\Users\victor.marques\Desktop\Projetos\SMS\PSS\packages\sms-mes-planning-pss-api\Temp\script.ts" --target ES5

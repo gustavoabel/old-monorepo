@@ -1,0 +1,1 @@
+cd /home/arthsilva/Projects/SMS/lerna-repo-pss/packages/sms-mes-planning-pss-api/Temp && tsc ./script.ts --target ES5

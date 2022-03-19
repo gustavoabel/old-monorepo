@@ -1,0 +1,45 @@
+{
+  "name": "@sms/plasma-pg-api",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Vetta Tecnologia S.A.",
+  "license": "SEE LICENSE IN license.md",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "dev-debug": "nodemon --exec node --inspect=0.0.0.0:9229 --require ts-node/register src/index.ts",
+    "build": "tsc -p .",
+    "lint": "tsc --noEmit && eslint src/**/*.{ts,tsx} --fix",
+    "test": "mocha -r ts-node/register tests/**/parser.test.ts",
+    "postbuild": "npm run generate-parser && npm run copy-files",
+    "generate-parser": "antlr4-tool -l js -o src/grammars src/grammars/*.g4",
+    "copy-files": "copyfiles -u 1 \"src/**/*\" -e \"src/**/*.ts\" dist"
+  },
+  "dependencies": {
+    "@sms/plasma-nodejs-api": "~1.0.61",
+    "json2csv": "~5.0.0"
+  },
+  "devDependencies": {
+    "@sms/eslint-config-ts-recommended": "~1.0.0",
+    "@sms/plasma-api-client": "~1.0.23",
+    "@types/chai": "~4.2.14",
+    "@types/mocha": "~8.2.0",
+    "@types/node": "~14.14.14",
+    "@typescript-eslint/eslint-plugin": "~4.10.0",
+    "antlr4-tool": "~1.1.1",
+    "chai": "~4.2.0",
+    "copyfiles": "~2.3.0",
+    "eslint": "~7.15.0",
+    "eslint-plugin-import-helpers": "~1.1.0",
+    "eslint-plugin-prettier": "~3.3.0",
+    "eslint-plugin-react": "~7.21.5",
+    "eslint-plugin-react-hooks": "~4.2.0",
+    "husky": "~4.3.6",
+    "lint-staged": "~10.5.3",
+    "mocha": "~8.2.1",
+    "nodemon": "~2.0.6",
+    "prettier": "~2.2.1",
+    "ts-node": "~9.1.1",
+    "typescript": "~4.1.3"
+  }
+}

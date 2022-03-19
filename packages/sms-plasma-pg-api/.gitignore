@@ -1,0 +1,12 @@
+node_modules/
+dist/
+
+.DS_Store
+.env
+*.lock
+*-lock.yaml
+*-error.log
+*-debug.log
+
+*/grammars/*
+!*/grammars/*.g4

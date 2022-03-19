@@ -1,0 +1,36 @@
+{
+  // git
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+
+  // editor
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.rulers": [120],
+  "editor.minimap.enabled": false,
+  "editor.suggestSelection": "first",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+
+  // files
+  "files.autoSave": "onFocusChange",
+
+  // javascript
+  "javascript.validate.enable": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  // typescript
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // eslint
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+  // report
+  "telemetry.enableTelemetry": false,
+  "telemetry.enableCrashReporter": false,
+
+  // vsintellicode
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue"
+}

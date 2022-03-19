@@ -1,0 +1,12 @@
+{
+  "name": "@sms/plasma-base-db",
+  "version": "1.0.2",
+  "author": "Vetta Tecnologia S.A.",
+  "license": "SEE LICENSE IN license.md",
+  "files": [
+    "create"
+  ],
+  "publishConfig": {
+    "registry": "https://pkgs.dev.azure.com/sms-digital/SMS-digital-Application-Platform/_packaging/sms-plasma/npm/registry/"
+  }
+}

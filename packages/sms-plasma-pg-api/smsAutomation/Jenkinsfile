@@ -1,0 +1,123 @@
+node {
+  
+  
+  stage 'Checkout'
+  checkout([$class: 'GitSCM', branches: [[name: '*/develop']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'Azure_DevOps_Short-Term-Test', name: 'origin', refspec: '+refs/heads/develop:refs/remotes/origin/develop', url: 'https://dev.azure.com/sms-digital/SMS-digital-Application-Platform/_git/sms-plasma-pg-api']]])
+ 
+ 
+ 
+ 
+  stage 'Docker build'
+  
+    withCredentials([string(credentialsId: 'SMS-PLASMA-NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+
+        sh "docker build -t 133863848274.dkr.ecr.eu-central-1.amazonaws.com/sms-digital-docker-repository/sms-plasma-pg-api:latest  \
+        -t 133863848274.dkr.ecr.eu-central-1.amazonaws.com/sms-digital-docker-repository/sms-plasma-pg-api:1.0.${BUILD_NUMBER} . \
+        --build-arg NPM_TOKEN=${env.NPM_TOKEN}"
+
+    }
+    
+    
+ 
+  stage 'Docker push'
+  
+    try {
+        sh '''#!/bin/bash -e
+        aws ecr get-login --no-include-email --region eu-central-1 | sh    
+        docker push 133863848274.dkr.ecr.eu-central-1.amazonaws.com/sms-digital-docker-repository/sms-plasma-pg-api:latest
+        docker push 133863848274.dkr.ecr.eu-central-1.amazonaws.com/sms-digital-docker-repository/sms-plasma-pg-api:1.0.${BUILD_NUMBER}
+        '''
+        }
+    catch(err){
+        println err
+        throw err as java.lang.Throwable
+    }
+    
+     
+  // Get docker password for ECR from worker node
+  def DOCKER_PWD = sh(returnStdout: true, script: "aws ecr get-login-password --region eu-central-1") 
+
+  stage 'Deploy to REX DEV'
+  
+    withCredentials([sshUserPrivateKey(credentialsId: "dev-rex-server", keyFileVariable: 'keyfile')]) {
+        try{
+          sh """
+            ssh -i $keyfile -o "StrictHostKeyChecking no" ubuntu@172.28.3.117 << EOF
+            docker login 133863848274.dkr.ecr.eu-central-1.amazonaws.com --username AWS --password ${DOCKER_PWD} 
+            cd /home/ubuntu    
+            docker-compose pull sms-plasma-pg-api
+            docker-compose up -d
+            exit
+            EOF"""
+                
+        }catch(ex){
+            echo "Error"                 
+        }
+    }
+
+  stage 'Deploy to REX QAS'
+  
+    withCredentials([sshUserPrivateKey(credentialsId: "qas-rex-server", keyFileVariable: 'keyfile')]) {
+        try{
+          sh """
+            ssh -i $keyfile -o "StrictHostKeyChecking no" ubuntu@172.28.3.109 << EOF
+            docker login 133863848274.dkr.ecr.eu-central-1.amazonaws.com --username AWS --password ${DOCKER_PWD} 
+            cd /home/ubuntu    
+            docker-compose pull sms-plasma-pg-api
+            docker-compose up -d
+            exit
+            EOF"""
+                
+        }catch(ex){
+            echo "Error"                 
+        }
+    }
+
+  stage 'Deploy to Customer Portal DEV VM - Vetta On Prem'
+
+        
+    withCredentials([sshUserPrivateKey(credentialsId: "customer-portal-dev-ssh", keyFileVariable: 'keyfile')]) {
+        try{
+          sh """chmod 400 $keyfile
+            ssh -i $keyfile -o "StrictHostKeyChecking no" ubuntu@172.28.3.110 << EOF
+            docker login 133863848274.dkr.ecr.eu-central-1.amazonaws.com --username AWS --password ${DOCKER_PWD} 
+            cd /home/ubuntu    
+            docker-compose pull sms-plasma-pg-api
+            docker-compose up -d
+            exit
+            EOF"""
+                
+        }catch(ex){
+            echo "Error"                 
+        }
+    }
+
+  stage 'Deploy to Application Platform EC2'
+        
+    withCredentials([sshUserPrivateKey(credentialsId: "mes-infrastruktur-ec2-plasma-server", keyFileVariable: 'keyfile')]) {
+        try{
+          sh """chmod 400 $keyfile
+            ssh -i $keyfile -o "StrictHostKeyChecking no" ec2-user@100.98.0.158 << EOF
+            docker login 133863848274.dkr.ecr.eu-central-1.amazonaws.com --username AWS --password ${DOCKER_PWD} 
+            cd /data    
+            docker-compose pull sms-plasma-pg-api
+            docker-compose up -d
+            exit
+            EOF"""
+                
+        }catch(ex){
+            echo "Error"                 
+        }
+    }
+
+
+
+
+    // Test connectivity
+    //sh "ping -c 3 172.28.3.117" 
+    //sh "nc -zv 172.28.3.117 22"
+
+ 
+  stage 'Clean up'
+  cleanWs()
+}

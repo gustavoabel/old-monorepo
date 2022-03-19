@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  security-api:
+    build: .
+    image: security-api:1.0.0
+    container_name: security-api
+    restart: always
+    ports:
+      - 3001:3000
+    environment:
+      NODE_ENV: production
+      UDS_PATH: /tmp/security-api.sock
+      PG_API_PROTOCOL: HTTP
+      PG_API_PATH: http://host.docker.internal:12080
+      PORTAL_APP_URL: https://172.28.3.110
+      SECURITY_API_BASE_URL: https://172.28.3.110/security/api
+      SECURITY_SCHEMA: security
+      JWT_SECRET: 94fe4f95e52c62ff0c699dfd1a46252c
+      TOKEN_KEY: '@sms:token'
+      REFRESH_TOKEN_KEY: '@sms:refreshToken'
+      TOKEN_EXPIRES_IN: 900
+      REFRESH_TOKEN_EXPIRES_IN: 28800
+      CORS_ORIGIN_URL: http://localhost:3000,https://172.28.3.110

@@ -1,0 +1,8 @@
+.ant-spin-nested-loading > div > .ant-spin {
+  z-index: 1001 !important;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.ant-spin-container.ant-spin-blur {
+  opacity: 1;
+}

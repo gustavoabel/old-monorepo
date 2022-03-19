@@ -1,0 +1,23 @@
+{
+  "name": "@sms-mes/pss-db",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Vetta Tecnologia S.A.",
+  "license": "SEE LICENSE IN license.md",
+  "scripts": {
+    "clean": "node flyway.js clean base audit security pss",
+    "migrate": "node flyway.js migrate base audit security",
+    "migrate-sample": "node flyway.js migrate-sample base audit security --sample=basic",
+    "grafana": "node grafana.js"
+  },
+  "dependencies": {
+    "@sms/plasma-audit-db": "~1.0.2",
+    "@sms/plasma-base-db": "~1.0.2",
+    "@sms/plasma-security-db": "~2.0.0",
+    "axios": "~0.21.1",
+    "commander": "^6.2.0"
+  },
+  "devDependencies": {
+    "prettier": "~2.2.1"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@sms-mes/pss-repo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "husky-install": "lerna exec --no-bail -- \"cross-env INIT_CWD=. node -e \\\"require(\\'husky/lib/installer/bin.js\\')\\\" - install\"",
+    "husky-uninstall": "lerna exec --no-bail -- \"cross-env INIT_CWD=. node -e \\\"require(\\'husky/lib/installer/bin.js\\')\\\" - uninstall\"",
+    "generate-lock": "lerna clean --yes && lerna exec -- \"npm install --no-audit --prefer-offline --package-lock-only\"",
+    "generate-graph": "node scripts/generate-graph.js",
+    "proxy-server": "node scripts/proxy-server.js --pss"
+  },
+  "devDependencies": {
+    "@lerna/project": "~4.0.0",
+    "cross-env": "~7.0.3",
+    "express": "~4.17.1",
+    "graphviz": "~0.0.9",
+    "http-proxy-middleware": "~1.0.6"
+  }
+}

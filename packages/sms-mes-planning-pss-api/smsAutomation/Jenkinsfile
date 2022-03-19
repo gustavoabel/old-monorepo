@@ -1,0 +1,98 @@
+import hudson.model.*
+
+env.stageName
+env.propertiesFilename
+env.newPropertiesStructure = true
+env.stepsMapName = 'stepsMap'
+env.productName = 'SMSdigital' // will be toLowerCase for one purpose
+env.projectName = 'mes' //necessary for awsAccountName
+env.serviceName = "${env.JOB_NAME}".split('/')[1]
+env.time1 = System.currentTimeMillis() 
+
+properties(
+        [
+            buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '500')),
+            disableConcurrentBuilds()
+        ]
+)
+
+node("amz-linux") {
+
+    deleteDir()
+
+    try {
+
+        sh """[ -d ${serviceName} ] || mkdir ${serviceName}"""
+        dir(serviceName) {
+            checkout([$class: 'GitSCM', branches: [[name: '*/' + BRANCH_NAME]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'Gitea-smsdigitaladmin-Token', name: 'origin', refspec: '+refs/heads/' + BRANCH_NAME + ':refs/remotes/origin/' + BRANCH_NAME, url: 'https://git.tech.sms-digital.cloud/smsdigital/'+serviceName+'.git']]])
+
+            wrap([$class: 'BuildUser']) {
+                env.gitCommitAuthor = env.BUILD_USER
+            }
+        }
+
+        sh "[ -d pipeline ] || mkdir pipeline"
+        dir('pipeline') {
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'Gitea-smsdigitaladmin-Token', url: 'https://git.tech.sms-digital.cloud/smsdigital/platform-jenkins_automation.git']]])
+        }
+
+        def func = load('pipeline/functions/function.groovy')
+
+        //func.printEnvironment()
+
+        // unload in other file
+        // -- Steps count from file
+
+        // get the stepsMapCount
+	    def exists = fileExists pwd()+'/'+stepsMapName+'.properties'
+
+        if (exists) {
+            mapping = readProperties file: pwd() + '/'+stepsMapName+'.properties'
+        } else {
+            mapping = readProperties file: pwd() + '/pipeline/'+productName+'/'+stepsMapName+'.properties'
+        }
+        env.stepsCount = mapping['stepsCount'] as Integer
+
+        // Pipeline Steps - while
+            count = 0
+           	int stepsCount = Integer.parseInt(stepsCount)
+            while (count <= stepsCount) {
+                try {
+                    name = "${count}_name"
+                    env.step_name = mapping[name]
+                    echo "step_name: "+step_name
+                    stage("${step_name}") {
+                        def steps = load('pipeline/functions/steps.groovy');
+                        steps.stepToLoad(count)
+
+                    }
+                    count++;
+                }
+                catch (err) {
+                   println err
+                   throw err
+                }
+            }
+        currentBuild.result = 'SUCCESS'
+
+    } catch(err) {
+
+        throw err as java.lang.Throwable
+
+        def func = load('pipeline/functions/function.groovy')
+
+        step_job = mapping['end_err_job']
+        sload = "pipeline/"+productName+"/notifyHandler.groovy"
+        def end = load(sload);
+
+        end.jobStep()
+
+        currentBuild.result = 'FAILED'
+
+    } finally {
+
+        println "final"
+
+    }
+
+}

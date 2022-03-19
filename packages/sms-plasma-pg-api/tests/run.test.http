@@ -1,0 +1,27 @@
+@api = http://localhost:12080/api
+
+
+### select with spaces
+GET {{api}}/query/rex/asset
+  ?select='asset'.id,    name
+
+### single table, no filter
+GET {{api}}/query/rex/asset
+  ?select=id,name
+
+### single table, aliased
+GET {{api}}/query/rex/'a':asset
+  ?select=id,name
+
+### single join
+GET {{api}}/query/ts/sts
+  ?include='ls':layering_schema[id=layering_schema_id]&select='ba':'ls'.id,'be':'ls'.name
+
+
+### RPC
+
+### simple rpc
+GET {{api}}/rpc/rex/get_asset_hierarchy?args=0
+
+### simple rpc no parameter
+GET {{api}}/rpc/rex/get_asset_hierarchy_flat

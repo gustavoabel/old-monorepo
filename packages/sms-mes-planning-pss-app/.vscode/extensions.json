@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "formulahendry.auto-rename-tag",
+    "coenraads.bracket-pair-colorizer-2",
+    "naumovs.color-highlight",
+    "dsznajder.es7-react-js-snippets",
+    "eamodio.gitlens",
+    "vincaslt.highlight-matching-tag",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "VisualStudioExptTeam.vscodeintellicode",
+    "editorconfig.editorconfig"
+  ]
+}

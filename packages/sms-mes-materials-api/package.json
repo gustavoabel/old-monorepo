@@ -1,0 +1,12 @@
+{
+  "name": "sms-mes-materials-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "json-server -p 3333 --watch db.json --routes routes.json"
+  },
+  "dependencies": {
+    "json-server": "^0.17.0"
+  }
+}

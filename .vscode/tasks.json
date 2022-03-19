@@ -1,0 +1,121 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "pss-proxy-server",
+      "type": "shell",
+      "command": "node scripts/proxy-server.js --pss",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "[HPM] Proxy created",
+          "endsPattern": "Proxy server listening"
+        }
+      }
+    },
+    {
+      "label": "dev:security-api",
+      "type": "npm",
+      "script": "dev",
+      "path": "packages/sms-plasma-security-api/",
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "dev:pg-api",
+      "type": "npm",
+      "script": "dev",
+      "path": "packages/sms-plasma-pg-api/",
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "build:pss-api",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/packages/sms-mes-planning-pss-api/sms-mes-planning-pss-api.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "publish",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "publish",
+        "${workspaceFolder}/packages/sms-mes-planning-pss-ui/pss.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "watch:pss-ui",
+      "type": "npm",
+      "script": "watch",
+      "path": "packages/sms-mes-planning-pss-ui/",
+      "problemMatcher": "$tsc-watch",
+      "isBackground": true
+    },
+    {
+      "label": "watch:pss-api",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "watch",
+        "--project packages/sms-mes-planning-pss-api/sms-mes-planning-pss-api.csproj",
+        "run"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "dev:pss-app",
+      "type": "npm",
+      "script": "dev",
+      "path": "packages/sms-mes-planning-pss-app/",
+      "dependsOn": [
+        "pss-proxy-server",
+        "dev:security-api",
+        "dev:pg-api",
+        "watch:pss-ui",
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "watch:rccp-api",
+      "type": "shell",
+      "command": "dotnet watch --project packages/sms-mes-planning-rccp-api/ run",
+      "problemMatcher": "$msCompile",
+      "isBackground": true
+    },
+    {
+      "label": "watch:rccp-ui",
+      "type": "npm",
+      "script": "watch",
+      "path": "packages/sms-mes-planning-rccp-ui/",
+      "problemMatcher": "$tsc-watch",
+      "isBackground": true
+    },
+    {
+      "label": "dev:rccp-app",
+      "type": "npm",
+      "script": "dev",
+      "path": "packages/sms-mes-planning-rccp-app/",
+      "dependsOn": [
+        "watch:rccp-ui",
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+  ]
+}

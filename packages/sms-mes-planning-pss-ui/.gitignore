@@ -1,0 +1,10 @@
+node_modules/
+lib/
+es/
+
+.DS_Store
+.env
+*.lock
+*-lock.yaml
+*-error.log
+*-debug.log

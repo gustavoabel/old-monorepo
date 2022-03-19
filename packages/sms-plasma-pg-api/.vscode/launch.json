@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Nodemon: Launch & Attach",
+      "type": "node",
+      "request": "attach",
+      "restart": true,
+      "protocol": "inspector",
+      "port": 9229,
+      "preLaunchTask": "npm dev"
+    }
+  ]
+}
